@@ -10,9 +10,9 @@ import io.netty.handler.ssl.SslContext;
 import io.netty.handler.ssl.SslContextBuilder;
 import io.netty.handler.ssl.util.SelfSignedCertificate;
 
-public class ServerMain {
+public class BroadcastServer {
 	
-	static final int PORT = Integer.parseInt(System.getProperty("port", "8992"));
+	static final int PORT = 8992;
 	
 	public static void main(String[] args) throws Exception {
         SelfSignedCertificate ssc = new SelfSignedCertificate();
@@ -26,7 +26,7 @@ public class ServerMain {
             b.group(bossGroup, workerGroup)
              .channel(NioServerSocketChannel.class)
              .handler(new LoggingHandler(LogLevel.INFO))
-             .childHandler(new SecureChatServerInitializer(sslCtx));
+             .childHandler(new EPChannelInitializer(sslCtx));
 
             b.bind(PORT).sync().channel().closeFuture().sync();
         } finally {
